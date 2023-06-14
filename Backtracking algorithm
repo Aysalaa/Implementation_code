@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool isSafe(int vertex, int color, vector<vector<int>>& graph, vector<int>& colors) {
+    
+    for (int neighbor : graph[vertex]) {
+        if (colors[neighbor] == color) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool graphColoringUtil(vector<vector<int>>& graph, int numVertices, int numColors, vector<int>& colors, int vertex) {
+    
+    if (vertex == numVertices) {
+        return true;
+    }
+
+   
+    for (int color = 1; color <= numColors; ++color) {
+        if (isSafe(vertex, color, graph, colors)) {
+            colors[vertex] = color;
+
+          
+            if (graphColoringUtil(graph, numVertices, numColors, colors, vertex + 1)) {
+                return true;
+            }
+
+           
+            colors[vertex] = 0;
+        }
+    }
+
+    return false;
+}
+
+void graphColoring(vector<vector<int>>& graph, int numVertices, int numColors) {
+  
+    vector<int> colors(numVertices, 0);
+
+    
+    if (graphColoringUtil(graph, numVertices, numColors, colors, 0)) {
+        cout << "Graph can be colored with " << numColors << " colors." << endl;
+        cout << "Vertex Colors: ";
+        for (int color : colors) {
+            cout << color << " ";
+        }
+        cout << endl;
+    }
+    else {
+        cout << "Graph cannot be colored with " << numColors << " colors." << endl;
+    }
+}
+
+int main() {
+   
+    vector<vector<int>> graph = {
+            {1, 2, 3},
+            {0, 2},
+            {0, 1, 3},
+            {0, 2}
+    };
+
+    int numVertices = graph.size();
+    int numColors = 3;
+
+  
+    graphColoring(graph, numVertices, numColors);
+
+    return 0;
+}
